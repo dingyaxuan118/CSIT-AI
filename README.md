@@ -1,14 +1,3 @@
----
-AIGC:
-    ContentProducer: Minimax Agent AI
-    ContentPropagator: Minimax Agent AI
-    Label: AIGC
-    ProduceID: 70b55f7e42657715aa46966ccc5d9d6c
-    PropagateID: 70b55f7e42657715aa46966ccc5d9d6c
-    ReservedCode1: 30450220478ca512a0e99ac64cca534dbff4e86046186995b344b3a30ffc105b45883bdb0221008850436f38d1469f770b24c8b4e2360462179da250a5cd2607c55c53aaa53708
-    ReservedCode2: 304502210098b59ea6371e5ae0968e8c91bf3670e9685ef7223a747b0d1d16cd02103ff55602203085f3564dd59cf02459d53c8b6ef2672d933f3236aa0ef35c57964dda836554
----
-
 # SmartTutor - 智能作业辅导Agent
 
 ## 项目概述
