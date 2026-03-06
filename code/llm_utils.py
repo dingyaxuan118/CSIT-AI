@@ -15,6 +15,8 @@ except ImportError:
     print("Warning: openai package not installed")
 
 class LLMClient:
+    MODELSCOPE_BASE_URL = "https://api-inference.modelscope.cn/v1"
+    MODELSCOPE_DEFAULT_MODEL = "MiniMax/MiniMax-M2.5"
     """LLM客户端封装类"""
 
     def __init__(self, api_source: str = "openai", api_key: Optional[str] = None):
@@ -31,6 +33,11 @@ class LLMClient:
             self.api_key = api_key
         elif api_source == "openai":
             self.api_key = os.getenv("OPENAI_API_KEY", "")
+        elif api_source == "modelscope":
+            self.api_key = (
+                os.getenv("MODELSCOPE_API_KEY")
+                or "ms-aea9b1d5-44e4-4192-8c0d-db217485788d"
+            )
         elif api_source in ["azure", "hkust"]:
             self.api_key = os.getenv("AZURE_OPENAI_API_KEY", "")
         else:
@@ -39,6 +46,11 @@ class LLMClient:
         # 初始化客户端
         if api_source == "openai" and self.api_key:
             self.client = OpenAI(api_key=self.api_key)
+        elif api_source == "modelscope" and self.api_key:
+            self.client = OpenAI(
+                base_url=self.MODELSCOPE_BASE_URL,
+                api_key=self.api_key
+            )
         else:
             self.client = None
 
@@ -78,6 +90,9 @@ class LLMClient:
 
         try:
             if self.client:
+                if self.api_source == "modelscope" and model == "gpt-4o-mini":
+                    model = self.MODELSCOPE_DEFAULT_MODEL
+
                 response = self.client.chat.completions.create(
                     model=model,
                     messages=messages,

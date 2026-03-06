@@ -21,7 +21,7 @@ from llm_utils import get_llm_client, LLMClient
 from guardrails import Guardrails, IntentCategory, create_guardrails
 from math_agent import MathAgent, create_math_agent
 from history_agent import HistoryAgent, create_history_agent
-from finance_agent import FinanceAgent, create_finance_agent
+#from finance_agent import FinanceAgent, create_finance_agent
 from economics_agent import EconomicsAgent, create_economics_agent
 from chemistry_agent import ChemistryAgent, create_chemistry_agent
 
@@ -129,7 +129,7 @@ def render_sidebar():
     # API来源选择
     api_source = st.sidebar.selectbox(
         "API来源",
-        ["mock", "openai", "azure", "hkust"],
+        ["mock", "openai", "modelscope", "azure", "hkust"],
         index=0,
         help="选择使用的LLM API来源。mock模式使用内置响应。"
     )
