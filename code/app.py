@@ -27,7 +27,7 @@ from chemistry_agent import ChemistryAgent, create_chemistry_agent
 
 # ==================== 页面配置 ====================
 st.set_page_config(
-    page_title="SmartTutor - 智能作业辅导",
+    page_title="SmartTutor - Intelligent Homework Assistant",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -123,52 +123,52 @@ def init_session_state():
 # ==================== 组件函数 ====================
 def render_sidebar():
     """渲染侧边栏"""
-    st.sidebar.title("⚙️ 设置")
+    st.sidebar.title("⚙️ Settings")
 
     # API来源选择
     api_source = st.sidebar.selectbox(
-        "API来源",
+        "API Source",
         ["openai", "modelscope", "azure", "hkust"],
         index=0,
-        help="选择使用的LLM API来源。"
+        help="Select the LLM API source to use."
     )
     st.session_state.api_source = api_source
 
     # 用户年级设置
     user_level = st.sidebar.selectbox(
-        "我的年级",
+        "My Grade",
         ["university_freshman", "university_sophomore", "high_school"],
         index=0,
         format_func=lambda x: {
-            "university_freshman": "大学一年级",
-            "university_sophomore": "大学二年级",
-            "high_school": "高中生"
+            "university_freshman": "University Freshman",
+            "university_sophomore": "University Sophomore",
+            "high_school": "High School Student"
         }.get(x, x)
     )
     st.session_state.user_level = user_level
 
     # 调试开关
-    show_debug = st.sidebar.checkbox("显示调试信息", value=False)
+    show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
     st.session_state.show_debug = show_debug
 
     # 重置对话
-    if st.sidebar.button("🔄 重置对话"):
+    if st.sidebar.button("🔄 Reset Chat"):
         st.session_state.messages = []
         st.rerun()
 
     # 帮助信息
     st.sidebar.markdown("---")
     st.sidebar.markdown("""
-    ### 📖 使用说明
+    ### 📖 Instructions
 
-    1. **支持的学科**：数学、历史、经济、化学
-    2. **提问方式**：直接输入作业问题
-    3. **特殊功能**：
-       - 输入"总结"可总结对话
-       - 输入"练习题"可获取练习
-    4. **注意**：
-       - 旅行、娱乐等问题会被拒绝
-       - 冷门本地知识不在辅导范围内
+    1. **Supported Subjects**: Math, History, Economics, Chemistry
+    2. **How to ask**: Just enter your homework question directly
+    3. **Special Features**:
+       - Type "summarize" to summarize the conversation
+       - Type "exercises" to get practice questions
+    4. **Note**:
+       - Non-academic topics like travel or entertainment will be rejected
+       - Highly obscure or localized knowledge is out of scope
     """)
 
 
@@ -177,8 +177,8 @@ def render_header():
     st.markdown("""
     <div class="welcome-message">
         <h1>🎓 SmartTutor</h1>
-        <p>您的个人数学、历史、经济、化学作业辅导助手</p>
-        <p style="font-size: 0.9rem; opacity: 0.9;">专为大学一年级学生设计 | 智能护栏保障可靠性</p>
+        <p>Your personal Math, History, Economics, and Chemistry homework assistant</p>
+        <p style="font-size: 0.9rem; opacity: 0.9;">Designed for University Freshmen | Secured by Smart Guardrails</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -192,7 +192,7 @@ def render_chat_history():
 
         if role == "user":
             with st.chat_message("user", avatar="👤"):
-                st.markdown(f"**您**: {content}")
+                st.markdown(f"**You**: {content}")
         elif role == "assistant":
             with st.chat_message("assistant", avatar="🎓"):
                 st.markdown(content)
@@ -200,7 +200,7 @@ def render_chat_history():
                 # 显示调试信息（如果开启）
                 if debug_info and st.session_state.show_debug:
                     st.markdown("---")
-                    st.markdown(f'<div class="debug-info">🔍 调试信息: {debug_info}</div>',
+                    st.markdown(f'<div class="debug-info">🔍 Debug Info: {debug_info}</div>',
                               unsafe_allow_html=True)
         elif role == "system":
             with st.chat_message("system", avatar="ℹ️"):
@@ -225,7 +225,7 @@ def process_user_input(user_input: str):
     # 步骤1：验证输入
     is_valid, error_msg = guardrails.validate_input(user_input)
     if not is_valid:
-        return f"❌ {error_msg}", "输入验证失败"
+        return f"❌ {error_msg}", "Input Validation Failed"
 
     # 步骤2：快速检查（基于关键词）
     quick_category, quick_reason = guardrails.quick_check(user_input)
@@ -237,7 +237,7 @@ def process_user_input(user_input: str):
     final_category = llm_category if llm_category != IntentCategory.UNKNOWN else quick_category
 
     # 调试信息
-    debug_info = f"快速检查: {quick_category.value} ({quick_reason}) | LLM分类: {final_category.value}"
+    debug_info = f"Quick Check: {quick_category.value} ({quick_reason}) | LLM Classification: {final_category.value}"
 
     # 步骤4：路由和处理
     response = ""
@@ -281,13 +281,13 @@ def process_user_input(user_input: str):
 
     elif final_category == IntentCategory.SUMMARY_REQUEST:
         # 总结请求
-        summary_prompt = """请总结以下对话的内容要点："""
+        summary_prompt = """Please summarize the main points of the following conversation:"""
         conversation = "\n".join([
             f"{msg['role']}: {msg['content'][:200]}"
             for msg in st.session_state.messages
         ])
         response = llm_client.chat(
-            system_prompt="你是一个对话总结助手。请简洁地总结对话要点。",
+            system_prompt="You are a conversation summary assistant. Please summarize the key points of the conversation concisely entirely in English.",
             user_prompt=f"{summary_prompt}\n\n{conversation}",
             stream=True
         )
@@ -306,7 +306,7 @@ def process_user_input(user_input: str):
 
     else:
         # 未知类型，尝试默认处理
-        response = "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求x+1=2的解？'\n- 历史：'法国大革命的原因是什么？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
+        response = "Sorry, I couldn't understand your question. Please try asking in the form of a homework problem, for example:\n- Math: 'How to solve x+1=2?'\n- History: 'What were the causes of the French Revolution?'\n- Economics: 'How do supply and demand affect prices?'\n- Chemistry: 'What is the chemical formula for water?'"
 
     return response, debug_info
 
@@ -322,18 +322,18 @@ def main():
 
     # 显示欢迎消息（首次访问）
     if not st.session_state.messages:
-        st.info("👋 欢迎使用 SmartTutor！请在下方输入您的数学、历史、经济或化学作业问题。")
+        st.info("👋 Welcome to SmartTutor! Please enter your math, history, economics, or chemistry homework question below.")
 
     # 渲染聊天历史
     render_chat_history()
 
     # 聊天输入框
-    user_input = st.chat_input("请输入您的作业问题...")
+    user_input = st.chat_input("Please enter your homework question...")
 
     if user_input:
         # 立即显示用户消息
         with st.chat_message("user", avatar="👤"):
-            st.markdown(f"**您**: {user_input}")
+            st.markdown(f"**You**: {user_input}")
 
         # 系统处理并获取流式或普通响应
         response_data, debug_info = process_user_input(user_input)
@@ -349,7 +349,7 @@ def main():
             
             if debug_info and st.session_state.show_debug:
                 st.markdown("---")
-                st.markdown(f'<div class="debug-info">🔍 调试信息: {debug_info}</div>',
+                st.markdown(f'<div class="debug-info">🔍 Debug Info: {debug_info}</div>',
                             unsafe_allow_html=True)
 
         # 将双方对话存入历史记录，供刷新后渲染

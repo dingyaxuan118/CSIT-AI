@@ -11,20 +11,21 @@ class ChemistryAgent:
     """化学作业辅导Agent"""
 
     # 系统提示词模板
-    SYSTEM_PROMPT = """你是一位大学一年级的化学助教，专门帮助学生解答化学作业问题。
+    SYSTEM_PROMPT = """You are a first-year university chemistry teaching assistant, specialized in helping students with chemistry homework questions.
 
-你的特点：
-1. 教学风格：耐心、详细、循序渐进
-2. 解释方法：强调化学原理和反应机制
-3. 知识范围：有机化学基础、无机化学、物理化学入门、元素周期表、化学反应
-4. 难度适配：假设学生是大学一年级水平
+Your characteristics:
+1. Teaching style: Patient, detailed, step-by-step
+2. Explanation method: Emphasize chemical principles and reaction mechanisms
+3. Knowledge scope: Basic Organic Chemistry, Inorganic Chemistry, Introduction to Physical Chemistry, periodic table, chemical reactions
+4. Difficulty adaptation: Assume the student is at a first-year university level
 
-重要原则：
-- 如果问题超出大学一年级范围，请明确告知学生
-- 如果是基础概念问题，可以直接解释
-- 如果是复杂问题，请分步骤讲解
-- 使用清晰的化学术语和结构式
-- 适当使用化学方程式和例子来解释反应"""
+Important principles:
+- Always respond to the user ENTIRELY in English
+- If a question is beyond the scope of a first-year university student, please clearly inform the student
+- If it is a basic conceptual question, you can explain it directly
+- If it is a complex question, please explain it step-by-step
+- Use clear chemical terminology and structural formulas
+- Appropriately use chemical equations and examples to explain reactions"""
 
     def __init__(self, llm_client: LLMClient):
         """
@@ -92,15 +93,15 @@ class ChemistryAgent:
         Returns:
             练习题文本
         """
-        prompt = f"""请为大学一年级学生生成{count}道关于"{topic}"的化学练习题，难度为{difficulty}。
+        prompt = f"""Please generate {count} chemistry practice questions on the topic "{topic}" for a first-year university student, with a difficulty of {difficulty}.
 
-要求：
-1. 包含题目和详细解答
-2. 难度适中，适合大一学生
-3. 涵盖该主题的核心知识点"""
+Requirements:
+1. Include both the questions and detailed answers
+2. Moderate difficulty, suitable for university freshmen
+3. Covers the core knowledge points of the topic"""
 
         return self.llm_client.chat(
-            system_prompt="你是一位化学练习题生成专家。",
+            system_prompt="You are a chemistry practice question generation expert.",
             user_prompt=prompt,
             temperature=0.8
         )
@@ -116,10 +117,10 @@ class ChemistryAgent:
             适配提示词
         """
         level_prompts = {
-            "university_freshman": "学生是大学一年级新生，使用适合大一水平的讲解方式，侧重基础概念和原理。",
-            "university_sophomore": "学生是大学二年级学生，可以适当引入更深入的反应机理和复杂概念。",
-            "high_school": "学生是高中生，使用高中水平的讲解方式，侧重基本化学概念解释。",
-            "default": "学生是大学一年级新生，使用适合大一水平的讲解方式，侧重基础概念和原理。"
+            "university_freshman": "The student is a first-year university freshman, use an explanation style suitable for a freshman level, focusing on basic concepts and principles.",
+            "university_sophomore": "The student is a second-year university sophomore, you can appropriately introduce deeper reaction mechanisms and complex concepts.",
+            "high_school": "The student is a high school student, use a high-school level explanation style, focusing on basic chemical conceptual explanations.",
+            "default": "The student is a first-year university freshman, use an explanation style suitable for a freshman level, focusing on basic concepts and principles."
         }
         return level_prompts.get(user_level, level_prompts["default"])
 

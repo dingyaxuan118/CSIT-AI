@@ -1,9 +1,9 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartTutor - 智能作业辅导Agent</title>
+    <title>SmartTutor - Intelligent Homework Tutoring Agent</title>
     <style>
         * {
             margin: 0;
@@ -326,10 +326,10 @@
     <div class="container">
         <!-- 侧边栏 -->
         <div class="sidebar">
-            <h2>⚙️ 设置</h2>
+            <h2>⚙️ Settings</h2>
 
             <div class="form-group">
-                <label>API来源</label>
+                <label>API Source</label>
                 <select id="apiSource">
                     <option value="openai" selected>OpenAI API</option>
                     <option value="azure">Azure OpenAI</option>
@@ -338,28 +338,28 @@
             </div>
 
             <div class="form-group">
-                <label>我的年级</label>
+                <label>My Grade</label>
                 <select id="userLevel">
-                    <option value="university_freshman" selected>大学一年级</option>
-                    <option value="university_sophomore">大学二年级</option>
-                    <option value="high_school">高中生</option>
+                    <option value="university_freshman" selected>University Freshman</option>
+                    <option value="university_sophomore">University Sophomore</option>
+                    <option value="high_school">High School</option>
                 </select>
             </div>
 
             <div class="checkbox-group">
                 <input type="checkbox" id="showDebug">
-                <label for="showDebug">显示调试信息</label>
+                <label for="showDebug">Show Debug Info</label>
             </div>
 
-            <button class="btn" onclick="resetChat()">🔄 重置对话</button>
+            <button class="btn" onclick="resetChat()">🔄 Reset Chat</button>
 
             <div class="help-section">
-                <h3>📖 使用说明</h3>
+                <h3>📖 Instructions</h3>
                 <ul>
-                    <li><strong>支持的学科：</strong>数学、历史、经济、化学</li>
-                    <li><strong>提问方式：</strong>直接输入作业问题</li>
-                    <li><strong>特殊功能：</strong>输入"总结"可总结对话</li>
-                    <li><strong>注意：</strong>旅行、娱乐等问题会被拒绝</li>
+                    <li><strong>Supported Subjects:</strong> Math, History, Economics, Chemistry</li>
+                    <li><strong>How to Ask:</strong> Directly enter your homework question</li>
+                    <li><strong>Special Feature:</strong> Enter "summarize" to summarize the chat</li>
+                    <li><strong>Note:</strong> Travel, entertainment, and other unrelated queries will be rejected</li>
                 </ul>
             </div>
         </div>
@@ -368,21 +368,21 @@
         <div class="main-content">
             <div class="header">
                 <h1>🎓 SmartTutor</h1>
-                <p>您的个人数学、历史、经济、化学作业辅导助手</p>
-                <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 8px;">专为大学一年级学生设计 | 智能护栏保障可靠性</p>
+                <p>Your Personal Math, History, Economics, and Chemistry Homework Assistant</p>
+                <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 8px;">Designed for University Freshmen | Intelligent Guardrails for Reliability</p>
             </div>
 
             <div class="chat-container" id="chatContainer">
                 <div class="welcome-message">
                     <div class="welcome-icon">👋</div>
-                    <p>欢迎使用 SmartTutor！</p>
-                    <p style="margin-top: 10px; font-size: 14px;">请在下方输入您的数学、历史、经济或化学作业问题</p>
+                    <p>Welcome to SmartTutor!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Please enter your math, history, economics, or chemistry homework question below</p>
                 </div>
             </div>
 
             <div class="input-area">
-                <input type="text" id="userInput" placeholder="请输入您的作业问题..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendMessage()" id="sendBtn">发送</button>
+                <input type="text" id="userInput" placeholder="Please enter your homework question..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" id="sendBtn">Send</button>
             </div>
         </div>
     </div>
@@ -406,19 +406,19 @@
             // 显示加载状态
             const sendBtn = document.getElementById('sendBtn');
             sendBtn.disabled = true;
-            sendBtn.textContent = '处理中...';
+            sendBtn.textContent = 'Processing...';
 
             // 模拟处理延迟
             setTimeout(() => {
                 const response = "Error: API connection not implemented in static HTML interface. Please use the Python Streamlit app.";
                 
                 // 添加助手消息
-                addMessage('assistant', response, `API调用失败`);
+                addMessage('assistant', response, `API Call Failed`);
                 messages.push({ role: 'assistant', content: response });
 
                 // 恢复按钮状态
                 sendBtn.disabled = false;
-                sendBtn.textContent = '发送';
+                sendBtn.textContent = 'Send';
 
                 // 滚动到底部
                 scrollToBottom();
@@ -439,9 +439,9 @@
             messageDiv.className = `message ${role}`;
 
             const roleNames = {
-                'user': '您',
+                'user': 'You',
                 'assistant': 'SmartTutor',
-                'system': '系统'
+                'system': 'System'
             };
 
             let html = `<strong>${roleNames[role]}:</strong>`;
@@ -472,8 +472,8 @@
             container.innerHTML = `
                 <div class="welcome-message">
                     <div class="welcome-icon">👋</div>
-                    <p>欢迎使用 SmartTutor！</p>
-                    <p style="margin-top: 10px; font-size: 14px;">请在下方输入您的数学、历史、经济或化学作业问题</p>
+                    <p>Welcome to SmartTutor!</p>
+                    <p style="margin-top: 10px; font-size: 14px;">Please enter your math, history, economics, or chemistry homework question below</p>
                 </div>
             `;
         }
@@ -649,30 +649,30 @@ body {
     </div>
     <div class="tooltip-content">
       <section class="info-section">
-        <span>上海稀宇科技有限公司</span>
+        <span>Shanghai Xiyu Technology Co., Ltd.</span>
       </section>
 
       <section class="info-section">
         <a class="beian-link" href="https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31010402010179" target="_blank" rel="noreferrer">
           <img alt="hailuo-beian-icon" src="https://cdn.hailuoai.com/hailuo-video-web/public_assets/223037d3-79fd-4db0-a456-749f38a6a14b.png" class="beian-icon">
-          <span class="underline-text">沪公网安备31010402010179号</span>
+          <span class="underline-text">Shanghai Public Security Record 31010402010179</span>
         </a>
         <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer" class="underline-text">
-          沪ICP备2023003282号-38
+          Shanghai ICP Record 2023003282-38
         </a>
       </section>
 
       <section class="info-section">
-        <span>模型名称：MiniMax</span>
-        <span>备案号：Shanghai-MiniMax-202505230046</span>
+        <span>Model Name: MiniMax</span>
+        <span>Record Number: Shanghai-MiniMax-202505230046</span>
       </section>
 
       <section class="info-section">
         <a href="https://agent.minimaxi.com/doc/zh/terms-of-service.html" target="_blank" rel="noreferrer" class="underline-text">
-          用户协议
+          Terms of Service
         </a>
         <a href="https://agent.minimaxi.com/doc/zh/privacy-policy.html" target="_blank" rel="noreferrer" class="underline-text">
-          隐私政策
+          Privacy Policy
         </a>
       </section>
     </div>
@@ -703,7 +703,7 @@ body {
     return;
   }
   window.__iframeHighlightInitialized = true;
-  console.log("Iframe 高亮脚本已加载");
+  console.log("Iframe highlight script loaded");
 
   // 创建高亮覆盖层
   var overlay = document.createElement("div");
@@ -928,7 +928,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -950,7 +950,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1016,7 +1016,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1139,7 +1139,7 @@ body {
       source: "iframe-highlight-injector"
     }, "*");
   } catch (error) {
-    console.warn("无法发送就绪消息到父窗口:", error);
+    console.warn("Unable to send ready message to parent window:", error);
   }
 
   // 清理函数
@@ -1179,7 +1179,7 @@ body {
     return;
   }
   window.__iframeHighlightInitialized = true;
-  console.log("Iframe 高亮脚本已加载");
+  console.log("Iframe highlight script loaded");
 
   // 创建高亮覆盖层
   var overlay = document.createElement("div");
@@ -1404,7 +1404,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1426,7 +1426,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1492,7 +1492,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1615,7 +1615,7 @@ body {
       source: "iframe-highlight-injector"
     }, "*");
   } catch (error) {
-    console.warn("无法发送就绪消息到父窗口:", error);
+    console.warn("Unable to send ready message to parent window:", error);
   }
 
   // 清理函数
@@ -1655,7 +1655,7 @@ body {
     return;
   }
   window.__iframeHighlightInitialized = true;
-  console.log("Iframe 高亮脚本已加载");
+  console.log("Iframe highlight script loaded");
 
   // 创建高亮覆盖层
   var overlay = document.createElement("div");
@@ -1880,7 +1880,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1902,7 +1902,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -1968,7 +1968,7 @@ body {
         source: "iframe-highlight-injector"
       }, "*");
     } catch (error) {
-      console.warn("无法发送消息到父窗口:", error);
+      console.warn("Unable to send message to parent window:", error);
     }
   }
 
@@ -2091,7 +2091,7 @@ body {
       source: "iframe-highlight-injector"
     }, "*");
   } catch (error) {
-    console.warn("无法发送就绪消息到父窗口:", error);
+    console.warn("Unable to send ready message to parent window:", error);
   }
 
   // 清理函数

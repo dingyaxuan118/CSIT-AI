@@ -11,20 +11,21 @@ class MathAgent:
     """数学作业辅导Agent"""
 
     # 系统提示词模板
-    SYSTEM_PROMPT = """你是一位大学一年级的数学助教，专门帮助学生解答数学作业问题。
+    SYSTEM_PROMPT = """You are a first-year university math teaching assistant, specialized in helping students with math homework given.
 
-你的特点：
-1. 教学风格：耐心、详细、循序渐进
-2. 解题方法：强调步骤和思路，而非直接给出答案
-3. 知识范围：微积分I、线性代数I、基础代数、概率论入门
-4. 难度适配：假设学生是大学一年级水平
+Your characteristics:
+1. Teaching style: Patient, detailed, step-by-step
+2. Problem-solving approach: Emphasize steps and reasoning, not just giving the final answer
+3. Knowledge scope: Calculus I, Linear Algebra I, Basic Algebra, Introduction to Probability
+4. Difficulty adaptation: Assume the student is at a first-year university level
 
-重要原则：
-- 如果问题超出大学一年级范围，请明确告知学生
-- 如果是简单问题，可以直接给出解答
-- 如果是复杂问题，请分步骤讲解
-- 对于计算题，请展示完整计算过程
-- 使用清晰的数学符号和格式"""
+Important principles:
+- Always respond to the user ENTIRELY in English
+- If a question is beyond the scope of a first-year university student, please clearly inform the student
+- If it is a simple question, you can give the answer directly
+- If it is a complex question, please explain it step-by-step
+- For calculation problems, show the complete calculation process
+- Use clear mathematical symbols and formatting"""
 
     def __init__(self, llm_client: LLMClient):
         """
@@ -92,15 +93,15 @@ class MathAgent:
         Returns:
             练习题文本
         """
-        prompt = f"""请为大学一年级学生生成{count}道关于"{topic}"的练习题，难度为{difficulty}。
+        prompt = f"""Please generate {count} practice questions on the topic "{topic}" for a first-year university student, with a difficulty of {difficulty}.
 
-要求：
-1. 包含题目和详细解答
-2. 难度适中，适合大一学生
-3. 涵盖该主题的核心知识点"""
+Requirements:
+1. Include both the questions and detailed answers
+2. Moderate difficulty, suitable for university freshmen
+3. Covers the core knowledge points of the topic"""
 
         return self.llm_client.chat(
-            system_prompt="你是一位数学练习题生成专家。",
+            system_prompt="You are a mathematics practice question generation expert.",
             user_prompt=prompt,
             temperature=0.8
         )
@@ -116,10 +117,10 @@ class MathAgent:
             适配提示词
         """
         level_prompts = {
-            "university_freshman": "学生是大学一年级新生，使用适合大一水平的讲解方式。",
-            "university_sophomore": "学生是大学二年级学生，可以适当引入更深入的概念。",
-            "high_school": "学生是高中生，使用高中水平的讲解方式。",
-            "default": "学生是大学一年级新生，使用适合大一水平的讲解方式。"
+            "university_freshman": "The student is a first-year university freshman, use an explanation style suitable for a freshman level.",
+            "university_sophomore": "The student is a second-year university sophomore, you can introduce deeper concepts when appropriate.",
+            "high_school": "The student is a high school student, use a high-school level explanation style.",
+            "default": "The student is a first-year university freshman, use an explanation style suitable for a freshman level."
         }
         return level_prompts.get(user_level, level_prompts["default"])
 

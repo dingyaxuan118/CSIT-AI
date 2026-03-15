@@ -11,20 +11,21 @@ class EconomicsAgent:
     """经济作业辅导Agent"""
 
     # 系统提示词模板
-    SYSTEM_PROMPT = """你是一位大学一年级的经济学助教，专门帮助学生解答经济作业问题。
+    SYSTEM_PROMPT = """You are a first-year university economics teaching assistant, specialized in helping students with economics homework questions.
 
-你的特点：
-1. 教学风格：耐心、详细、循序渐进
-2. 解释方法：强调经济原理和逻辑分析
-3. 知识范围：微观经济学基础、宏观经济学入门、供求关系、市场机制、经济指标
-4. 难度适配：假设学生是大学一年级水平
+Your characteristics:
+1. Teaching style: Patient, detailed, step-by-step
+2. Explanation method: Emphasize economic principles and logical analysis
+3. Knowledge scope: Basic Microeconomics, Introduction to Macroeconomics, supply and demand, market mechanisms, economic indicators
+4. Difficulty adaptation: Assume the student is at a first-year university level
 
-重要原则：
-- 如果问题超出大学一年级范围，请明确告知学生
-- 如果是基础概念问题，可以直接解释
-- 如果是复杂问题，请分步骤讲解
-- 使用清晰的经济学术语和实际案例
-- 适当使用图表和例子来解释经济现象"""
+Important principles:
+- Always respond to the user ENTIRELY in English
+- If a question is beyond the scope of a first-year university student, please clearly inform the student
+- If it is a basic conceptual question, you can explain it directly
+- If it is a complex question, please explain it step-by-step
+- Use clear economic terminology and practical examples
+- Appropriately use charts and examples to explain economic phenomena"""
 
     def __init__(self, llm_client: LLMClient):
         """
@@ -92,15 +93,15 @@ class EconomicsAgent:
         Returns:
             练习题文本
         """
-        prompt = f"""请为大学一年级学生生成{count}道关于"{topic}"的经济学练习题，难度为{difficulty}。
+        prompt = f"""Please generate {count} economics practice questions on the topic "{topic}" for a first-year university student, with a difficulty of {difficulty}.
 
-要求：
-1. 包含题目和详细解答
-2. 难度适中，适合大一学生
-3. 涵盖该主题的核心知识点"""
+Requirements:
+1. Include both the questions and detailed answers
+2. Moderate difficulty, suitable for university freshmen
+3. Covers the core knowledge points of the topic"""
 
         return self.llm_client.chat(
-            system_prompt="你是一位经济学练习题生成专家。",
+            system_prompt="You are an economics practice question generation expert.",
             user_prompt=prompt,
             temperature=0.8
         )
@@ -116,10 +117,10 @@ class EconomicsAgent:
             适配提示词
         """
         level_prompts = {
-            "university_freshman": "学生是大学一年级新生，使用适合大一水平的讲解方式，侧重基础概念和原理。",
-            "university_sophomore": "学生是大学二年级学生，可以适当引入更深入的分析方法和模型。",
-            "high_school": "学生是高中生，使用高中水平的讲解方式，侧重基本经济概念解释。",
-            "default": "学生是大学一年级新生，使用适合大一水平的讲解方式，侧重基础概念和原理。"
+            "university_freshman": "The student is a first-year university freshman, use an explanation style suitable for a freshman level, focusing on basic concepts and principles.",
+            "university_sophomore": "The student is a second-year university sophomore, you can appropriately introduce deeper analytical methods and models.",
+            "high_school": "The student is a high school student, use a high-school level explanation style, focusing on basic economic conceptual explanations.",
+            "default": "The student is a first-year university freshman, use an explanation style suitable for a freshman level, focusing on basic concepts and principles."
         }
         return level_prompts.get(user_level, level_prompts["default"])
 

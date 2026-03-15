@@ -75,18 +75,18 @@ class Guardrails:
             return IntentCategory.UNKNOWN
 
         # 构建分类提示词
-        classification_prompt = """你是一个意图分类系统。请分析用户的输入并将其分类为以下类别之一：
+        classification_prompt = """You are an intent classification system. Please analyze the user's input and classify it into one of the following categories:
 
-- MATH_HOMEWORK: 数学作业问题（计算、证明、方程、微积分、线性代数等）
-- HISTORY_HOMEWORK: 历史作业问题（重大历史事件、人物、时期、世界历史等）
-- ECONOMICS_HOMEWORK: 经济学作业问题（供求关系、宏观经济、微观经济、市场机制等）
-- CHEMISTRY_HOMEWORK: 化学作业问题（化学反应、分子结构、元素周期表、有机化学等）
-- SUMMARY_REQUEST: 请求总结之前的对话
-- OFF_TOPIC: 离题内容（旅行、娱乐、日常生活建议等）
-- OBSCURE_SCOPE: 冷门/本地知识（具体的小大学、本地小店等无法验证的内容）
-- DANGEROUS: 危险内容（暴力、违法等）
+- MATH_HOMEWORK: Math homework questions (calculation, proof, equation, calculus, linear algebra, etc.)
+- HISTORY_HOMEWORK: History homework questions (major historical events, figures, periods, world history, etc.)
+- ECONOMICS_HOMEWORK: Economics homework questions (supply and demand, macroeconomics, microeconomics, market mechanisms, etc.)
+- CHEMISTRY_HOMEWORK: Chemistry homework questions (chemical reactions, molecular structure, periodic table, organic chemistry, etc.)
+- SUMMARY_REQUEST: Request to summarize the previous conversation
+- OFF_TOPIC: Off-topic content (travel, entertainment, daily life advice, etc.)
+- OBSCURE_SCOPE: Obscure/local knowledge (specific small colleges, local shops, etc. that cannot be verified)
+- DANGEROUS: Dangerous content (violence, illegal activities, etc.)
 
-请只输出类别名称，不要输出其他内容。"""
+Please output ONLY the category name, and nothing else."""
 
         try:
             result = self.llm_client.chat(
@@ -123,22 +123,22 @@ class Guardrails:
         # 检查危险内容
         for keyword in self.DANGEROUS_KEYWORDS:
             if keyword in user_lower:
-                return (IntentCategory.DANGEROUS, f"检测到危险关键词: {keyword}")
+                return (IntentCategory.DANGEROUS, f"Dangerous keyword detected: {keyword}")
 
         # 检查离题内容
         for keyword in self.OFF_TOPIC_KEYWORDS:
             if keyword in user_lower:
-                return (IntentCategory.OFF_TOPIC, f"检测到离题关键词: {keyword}")
+                return (IntentCategory.OFF_TOPIC, f"Off-topic keyword detected: {keyword}")
 
         # 检查冷门知识
         for keyword in self.OBSCURE_KEYWORDS:
             if keyword in user_lower:
-                return (IntentCategory.OBSCURE_SCOPE, f"检测到冷门知识关键词: {keyword}")
+                return (IntentCategory.OBSCURE_SCOPE, f"Obscure knowledge keyword detected: {keyword}")
 
         # 检查总结请求
         if any(word in user_lower for word in ["summarize", "总结", "摘要", "概括"]):
             if any(word in user_lower for word in ["conversation", "对话", "我们", "刚才"]):
-                return (IntentCategory.SUMMARY_REQUEST, "检测到总结请求")
+                return (IntentCategory.SUMMARY_REQUEST, "Summary request detected")
 
         # 检查学科关键词
         math_keywords = ["derivative", "integral", "equation", "solve", "calculate",
@@ -156,21 +156,21 @@ class Guardrails:
 
         for keyword in math_keywords:
             if keyword in user_lower:
-                return (IntentCategory.MATH_HOMEWORK, f"检测到数学关键词: {keyword}")
+                return (IntentCategory.MATH_HOMEWORK, f"Math keyword detected: {keyword}")
 
         for keyword in history_keywords:
             if keyword in user_lower:
-                return (IntentCategory.HISTORY_HOMEWORK, f"检测到历史关键词: {keyword}")
+                return (IntentCategory.HISTORY_HOMEWORK, f"History keyword detected: {keyword}")
 
         for keyword in economics_keywords:
             if keyword in user_lower:
-                return (IntentCategory.ECONOMICS_HOMEWORK, f"检测到经济关键词: {keyword}")
+                return (IntentCategory.ECONOMICS_HOMEWORK, f"Economics keyword detected: {keyword}")
 
         for keyword in chemistry_keywords:
             if keyword in user_lower:
-                return (IntentCategory.CHEMISTRY_HOMEWORK, f"检测到化学关键词: {keyword}")
+                return (IntentCategory.CHEMISTRY_HOMEWORK, f"Chemistry keyword detected: {keyword}")
 
-        return (IntentCategory.UNKNOWN, "未检测到明确意图")
+        return (IntentCategory.UNKNOWN, "No clear intent detected")
 
     def validate_input(self, user_input: str) -> Tuple[bool, str]:
         """
@@ -184,11 +184,11 @@ class Guardrails:
         """
         # 检查是否为空
         if not user_input or not user_input.strip():
-            return False, "输入不能为空"
+            return False, "Input cannot be empty."
 
         # 检查长度
         if len(user_input) > 2000:
-            return False, "输入过长，请简化问题"
+            return False, "Input is too long, please simplify your question."
 
         return True, ""
 
@@ -223,16 +223,16 @@ class Guardrails:
             拒绝消息文本
         """
         messages = {
-            IntentCategory.OFF_TOPIC: "抱歉，我是一个作业辅导Agent，专门帮助学生解答数学、历史、经济和化学问题。您的这个问题不在我的辅导范围内。",
-            IntentCategory.OBSCURE_SCOPE: "抱歉，这个问题涉及较为冷门或本地化的知识，可能无法提供准确的信息。我专门帮助大学一年级的数学、历史、经济和化学作业问题。",
-            IntentCategory.DANGEROUS: "抱歉，我无法帮助处理这类内容。请专注于学业相关的问题。",
-            IntentCategory.UNKNOWN: "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求导？'\n- 历史：'法国大革命的原因是什么？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
+            IntentCategory.OFF_TOPIC: "Sorry, I am a homework tutoring Agent specifically designed to help students with Math, History, Economics, and Chemistry problems. Your question is outside my tutoring scope.",
+            IntentCategory.OBSCURE_SCOPE: "Sorry, this question involves relatively obscure or highly localized knowledge, and I might not be able to provide accurate information. I specialize in helping first-year university students with Math, History, Economics, and Chemistry homework problems.",
+            IntentCategory.DANGEROUS: "Sorry, I cannot help process this type of content. Please focus on academic-related questions.",
+            IntentCategory.UNKNOWN: "Sorry, I cannot understand your question. Please try asking in the form of a homework problem, for example:\n- Math: 'How do you calculate a derivative?'\n- History: 'What were the causes of the French Revolution?'\n- Economics: 'How do supply and demand affect prices?'\n- Chemistry: 'What is the chemical formula for water?'"
         }
 
-        base_message = messages.get(category, "抱歉，我无法帮助回答这个问题。")
+        base_message = messages.get(category, "Sorry, I cannot help answer this question.")
 
         if reason:
-            return f"{base_message}\n\n原因：{reason}"
+            return f"{base_message}\n\nReason: {reason}"
 
         return base_message
 

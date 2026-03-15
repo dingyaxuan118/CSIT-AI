@@ -11,19 +11,20 @@ class HistoryAgent:
     """历史作业辅导Agent"""
 
     # 系统提示词模板
-    SYSTEM_PROMPT = """你是一位大学一年级的历史导师，专门帮助学生解答历史作业问题。
+    SYSTEM_PROMPT = """You are a first-year university history tutor, specializing in helping students with their history homework questions.
 
-你的特点：
-1. 教学风格：客观、详实、注重历史背景
-2. 解答方法：提供背景、原因、过程、影响等完整分析
-3. 知识范围：世界历史、主要国家历史、重大历史事件
-4. 难度适配：假设学生是大学一年级水平
+Your characteristics:
+1. Teaching style: Objective, detailed, emphasizing historical context
+2. Answering method: Provide complete analysis including background, causes, processes, and impacts
+3. Knowledge scope: World history, major nations' history, significant historical events
+4. Difficulty adaptation: Assume the student is at a first-year university level
 
-重要原则：
-- 只回答有据可查的通用历史（世界历史、大国历史、重大事件）
-- 拒绝回答无法验证的本地冷门历史
-- 如果问题不明确，适当询问以明确问题
-- 保持历史客观性，避免过度解读"""
+Important principles:
+- Always respond to the user ENTIRELY in English
+- Only answer verifiable general history (world history, major nations' history, significant events)
+- Refuse to answer obscure or local history that cannot be verified
+- If a question is unclear, ask appropriate questions to clarify it
+- Maintain historical objectivity, avoiding over-interpretation"""
 
     def __init__(self, llm_client: LLMClient):
         """
@@ -90,15 +91,15 @@ class HistoryAgent:
         Returns:
             主题建议文本
         """
-        prompt = f"""请为大学一年级历史学生提供{count}个关于{era}时期{region}历史的学习主题建议。
+        prompt = f"""Please provide {count} study topic suggestions regarding {region} history during the {era} period for a first-year university history student.
 
-要求：
-1. 每个主题简要说明内容和重要性
-2. 适合大一学生理解
-3. 涵盖该时期的核心知识点"""
+Requirements:
+1. Briefly explain the content and importance of each topic
+2. Suitable for a first-year university student's understanding
+3. Cover the core knowledge points of the period"""
 
         return self.llm_client.chat(
-            system_prompt="你是一位历史学习顾问。",
+            system_prompt="You are a history study advisor.",
             user_prompt=prompt,
             temperature=0.8
         )
@@ -114,10 +115,10 @@ class HistoryAgent:
             适配提示词
         """
         level_prompts = {
-            "university_freshman": "学生是大学一年级新生，使用适合大一水平的讲解方式。",
-            "university_sophomore": "学生是大学二年级学生，可以适当引入更深入的历史分析。",
-            "high_school": "学生是高中生，使用高中水平的讲解方式。",
-            "default": "学生是大学一年级新生，使用适合大一水平的讲解方式。"
+            "university_freshman": "The student is a first-year university freshman, use an explanation style suitable for a freshman level.",
+            "university_sophomore": "The student is a second-year university sophomore, you can appropriately introduce deeper historical analysis.",
+            "high_school": "The student is a high school student, use a high-school level explanation style.",
+            "default": "The student is a first-year university freshman, use an explanation style suitable for a freshman level."
         }
         return level_prompts.get(user_level, level_prompts["default"])
 
