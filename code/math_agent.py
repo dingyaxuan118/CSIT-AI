@@ -71,7 +71,8 @@ class MathAgent:
         return self.llm_client.chat(
             system_prompt=full_prompt,
             user_prompt=question,
-            history=history
+            history=history,
+            stream=True
         )
 
     def generate_exercises(

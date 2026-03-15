@@ -61,8 +61,9 @@ class LLMClient:
         history: Optional[List[Dict[str, str]]] = None,
         model: str = "gpt-4o-mini",
         temperature: float = 0.7,
-        max_tokens: int = 2000
-    ) -> str:
+        max_tokens: int = 2000,
+        stream: bool = False
+    ) -> Any:
         """
         发送聊天请求到LLM
 
@@ -97,12 +98,29 @@ class LLMClient:
                     model=model,
                     messages=messages,
                     temperature=temperature,
-                    max_tokens=max_tokens
+                    max_tokens=max_tokens,
+                    stream=stream
                 )
+                if stream:
+                    def generate():
+                        for chunk in response:
+                            if hasattr(chunk, 'choices') and len(chunk.choices) > 0:
+                                delta = chunk.choices[0].delta
+                                if hasattr(delta, 'content') and delta.content is not None:
+                                    yield delta.content
+                    return generate()
                 return response.choices[0].message.content
             else:
+                if stream:
+                    def error_gen():
+                        yield "Error: No valid LLM client initialized. Please check your API key and source."
+                    return error_gen()
                 return "Error: No valid LLM client initialized. Please check your API key and source."
         except Exception as e:
+            if stream:
+                def error_gen():
+                    yield f"Error: {str(e)}"
+                return error_gen()
             return f"Error: {str(e)}"
 
 def get_llm_client(api_source: str = "openai") -> LLMClient:

@@ -213,13 +213,9 @@ def process_user_input(user_input: str):
 
     Args:
         user_input: 用户输入
+    Returns:
+        tuple: (response, debug_info)
     """
-    # 添加用户消息到历史
-    st.session_state.messages.append({
-        "role": "user",
-        "content": user_input
-    })
-
     # 获取LLM客户端
     llm_client = get_llm_client(st.session_state.api_source)
 
@@ -229,12 +225,7 @@ def process_user_input(user_input: str):
     # 步骤1：验证输入
     is_valid, error_msg = guardrails.validate_input(user_input)
     if not is_valid:
-        response = f"❌ {error_msg}"
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": response
-        })
-        return
+        return f"❌ {error_msg}", "输入验证失败"
 
     # 步骤2：快速检查（基于关键词）
     quick_category, quick_reason = guardrails.quick_check(user_input)
@@ -257,7 +248,7 @@ def process_user_input(user_input: str):
         math_agent = create_math_agent(llm_client)
         response = math_agent.answer(
             question=user_input,
-            history=st.session_state.messages[:-1],
+            history=st.session_state.messages,
             user_level=st.session_state.user_level
         )
 
@@ -266,7 +257,7 @@ def process_user_input(user_input: str):
         history_agent = create_history_agent(llm_client)
         response = history_agent.answer(
             question=user_input,
-            history=st.session_state.messages[:-1],
+            history=st.session_state.messages,
             user_level=st.session_state.user_level
         )
 
@@ -275,7 +266,7 @@ def process_user_input(user_input: str):
         economics_agent = create_economics_agent(llm_client)
         response = economics_agent.answer(
             question=user_input,
-            history=st.session_state.messages[:-1],
+            history=st.session_state.messages,
             user_level=st.session_state.user_level
         )
 
@@ -284,7 +275,7 @@ def process_user_input(user_input: str):
         chemistry_agent = create_chemistry_agent(llm_client)
         response = chemistry_agent.answer(
             question=user_input,
-            history=st.session_state.messages[:-1],
+            history=st.session_state.messages,
             user_level=st.session_state.user_level
         )
 
@@ -293,11 +284,12 @@ def process_user_input(user_input: str):
         summary_prompt = """请总结以下对话的内容要点："""
         conversation = "\n".join([
             f"{msg['role']}: {msg['content'][:200]}"
-            for msg in st.session_state.messages[:-1]
+            for msg in st.session_state.messages
         ])
         response = llm_client.chat(
             system_prompt="你是一个对话总结助手。请简洁地总结对话要点。",
-            user_prompt=f"{summary_prompt}\n\n{conversation}"
+            user_prompt=f"{summary_prompt}\n\n{conversation}",
+            stream=True
         )
 
     elif final_category == IntentCategory.OFF_TOPIC:
@@ -316,12 +308,7 @@ def process_user_input(user_input: str):
         # 未知类型，尝试默认处理
         response = "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求x+1=2的解？'\n- 历史：'法国大革命的原因是什么？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
 
-    # 添加助手回复到历史
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": response,
-        "debug": debug_info
-    })
+    return response, debug_info
 
 
 def main():
@@ -344,8 +331,37 @@ def main():
     user_input = st.chat_input("请输入您的作业问题...")
 
     if user_input:
-        process_user_input(user_input)
-        st.rerun()
+        # 立即显示用户消息
+        with st.chat_message("user", avatar="👤"):
+            st.markdown(f"**您**: {user_input}")
+
+        # 系统处理并获取流式或普通响应
+        response_data, debug_info = process_user_input(user_input)
+
+        # 渲染助手响应
+        with st.chat_message("assistant", avatar="🎓"):
+            # 如果 response_data 是生成器（即流式内容）
+            if hasattr(response_data, '__iter__') and not isinstance(response_data, str):
+                full_response = st.write_stream(response_data)
+            else:
+                st.markdown(response_data)
+                full_response = response_data
+            
+            if debug_info and st.session_state.show_debug:
+                st.markdown("---")
+                st.markdown(f'<div class="debug-info">🔍 调试信息: {debug_info}</div>',
+                            unsafe_allow_html=True)
+
+        # 将双方对话存入历史记录，供刷新后渲染
+        st.session_state.messages.append({
+            "role": "user",
+            "content": user_input
+        })
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": full_response,
+            "debug": debug_info
+        })
 
 
 # ==================== 程序入口 ====================
