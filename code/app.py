@@ -112,7 +112,7 @@ def init_session_state():
         st.session_state.messages = []
 
     if "api_source" not in st.session_state:
-        st.session_state.api_source = "mock"  # 默认使用模拟模式
+        st.session_state.api_source = "modelscope"  # 默认使用modelscope模式
 
     if "show_debug" not in st.session_state:
         st.session_state.show_debug = False
@@ -129,9 +129,9 @@ def render_sidebar():
     # API来源选择
     api_source = st.sidebar.selectbox(
         "API来源",
-        ["mock", "openai", "modelscope", "azure", "hkust"],
+        ["openai", "modelscope", "azure", "hkust"],
         index=0,
-        help="选择使用的LLM API来源。mock模式使用内置响应。"
+        help="选择使用的LLM API来源。"
     )
     st.session_state.api_source = api_source
 
