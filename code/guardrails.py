@@ -11,7 +11,6 @@ class IntentCategory(Enum):
     """用户意图分类"""
     MATH_HOMEWORK = "MATH_HOMEWORK"      # 数学作业
     HISTORY_HOMEWORK = "HISTORY_HOMEWORK" # 历史作业
-    FINANCE_HOMEWORK = "FINANCE_HOMEWORK" # 金融作业
     ECONOMICS_HOMEWORK = "ECONOMICS_HOMEWORK" # 经济作业
     CHEMISTRY_HOMEWORK = "CHEMISTRY_HOMEWORK" # 化学作业
     SUMMARY_REQUEST = "SUMMARY_REQUEST"   # 总结请求
@@ -80,7 +79,6 @@ class Guardrails:
 
 - MATH_HOMEWORK: 数学作业问题（计算、证明、方程、微积分、线性代数等）
 - HISTORY_HOMEWORK: 历史作业问题（重大历史事件、人物、时期、世界历史等）
-- FINANCE_HOMEWORK: 金融作业问题（投资、风险管理、金融市场、财务报表等）
 - ECONOMICS_HOMEWORK: 经济学作业问题（供求关系、宏观经济、微观经济、市场机制等）
 - CHEMISTRY_HOMEWORK: 化学作业问题（化学反应、分子结构、元素周期表、有机化学等）
 - SUMMARY_REQUEST: 请求总结之前的对话
@@ -149,9 +147,6 @@ class Guardrails:
         history_keywords = ["history", "president", "revolution", "war", "empire",
                           "history", "ancient", "modern", "century",
                           "历史", "总统", "革命", "战争", "帝国", "古代", "现代"]
-        finance_keywords = ["stock", "bond", "investment", "portfolio", "dividend",
-                          "financial", "market", "trading", "interest", "risk",
-                          "股票", "债券", "投资", "股息", "金融", "市场", "交易", "利率", "风险"]
         economics_keywords = ["economics", "gdp", "inflation", "supply", "demand",
                             "macro", "micro", "trade", "currency", "fiscal",
                             "经济", "国内生产总值", "通货膨胀", "供给", "需求", "宏观", "微观", "贸易", "货币", "财政"]
@@ -166,10 +161,6 @@ class Guardrails:
         for keyword in history_keywords:
             if keyword in user_lower:
                 return (IntentCategory.HISTORY_HOMEWORK, f"检测到历史关键词: {keyword}")
-
-        for keyword in finance_keywords:
-            if keyword in user_lower:
-                return (IntentCategory.FINANCE_HOMEWORK, f"检测到金融关键词: {keyword}")
 
         for keyword in economics_keywords:
             if keyword in user_lower:
@@ -214,7 +205,6 @@ class Guardrails:
         accepted_categories = [
             IntentCategory.MATH_HOMEWORK,
             IntentCategory.HISTORY_HOMEWORK,
-            IntentCategory.FINANCE_HOMEWORK,
             IntentCategory.ECONOMICS_HOMEWORK,
             IntentCategory.CHEMISTRY_HOMEWORK,
             IntentCategory.SUMMARY_REQUEST
@@ -233,10 +223,10 @@ class Guardrails:
             拒绝消息文本
         """
         messages = {
-            IntentCategory.OFF_TOPIC: "抱歉，我是一个作业辅导Agent，专门帮助学生解答数学、历史、金融、经济和化学问题。您的这个问题不在我的辅导范围内。",
-            IntentCategory.OBSCURE_SCOPE: "抱歉，这个问题涉及较为冷门或本地化的知识，可能无法提供准确的信息。我专门帮助大学一年级的数学、历史、金融、经济和化学作业问题。",
+            IntentCategory.OFF_TOPIC: "抱歉，我是一个作业辅导Agent，专门帮助学生解答数学、历史、经济和化学问题。您的这个问题不在我的辅导范围内。",
+            IntentCategory.OBSCURE_SCOPE: "抱歉，这个问题涉及较为冷门或本地化的知识，可能无法提供准确的信息。我专门帮助大学一年级的数学、历史、经济和化学作业问题。",
             IntentCategory.DANGEROUS: "抱歉，我无法帮助处理这类内容。请专注于学业相关的问题。",
-            IntentCategory.UNKNOWN: "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求导？'\n- 历史：'法国大革命的原因是什么？'\n- 金融：'什么是股票？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
+            IntentCategory.UNKNOWN: "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求导？'\n- 历史：'法国大革命的原因是什么？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
         }
 
         base_message = messages.get(category, "抱歉，我无法帮助回答这个问题。")

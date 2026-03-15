@@ -4,7 +4,7 @@ SmartTutor - 智能作业辅导Agent主程序
 
 功能：
 - 多轮对话辅导
-- 数学、历史、金融、经济、化学问题解答
+- 数学、历史、经济、化学问题解答
 - 智能护栏系统
 - 对话总结功能
 """
@@ -21,7 +21,6 @@ from llm_utils import get_llm_client, LLMClient
 from guardrails import Guardrails, IntentCategory, create_guardrails
 from math_agent import MathAgent, create_math_agent
 from history_agent import HistoryAgent, create_history_agent
-#from finance_agent import FinanceAgent, create_finance_agent
 from economics_agent import EconomicsAgent, create_economics_agent
 from chemistry_agent import ChemistryAgent, create_chemistry_agent
 
@@ -162,7 +161,7 @@ def render_sidebar():
     st.sidebar.markdown("""
     ### 📖 使用说明
 
-    1. **支持的学科**：数学、历史、金融、经济、化学
+    1. **支持的学科**：数学、历史、经济、化学
     2. **提问方式**：直接输入作业问题
     3. **特殊功能**：
        - 输入"总结"可总结对话
@@ -178,7 +177,7 @@ def render_header():
     st.markdown("""
     <div class="welcome-message">
         <h1>🎓 SmartTutor</h1>
-        <p>您的个人数学、历史、金融、经济、化学作业辅导助手</p>
+        <p>您的个人数学、历史、经济、化学作业辅导助手</p>
         <p style="font-size: 0.9rem; opacity: 0.9;">专为大学一年级学生设计 | 智能护栏保障可靠性</p>
     </div>
     """, unsafe_allow_html=True)
@@ -271,15 +270,6 @@ def process_user_input(user_input: str):
             user_level=st.session_state.user_level
         )
 
-    elif final_category == IntentCategory.FINANCE_HOMEWORK:
-        # 金融问题
-        finance_agent = create_finance_agent(llm_client)
-        response = finance_agent.answer(
-            question=user_input,
-            history=st.session_state.messages[:-1],
-            user_level=st.session_state.user_level
-        )
-
     elif final_category == IntentCategory.ECONOMICS_HOMEWORK:
         # 经济问题
         economics_agent = create_economics_agent(llm_client)
@@ -324,7 +314,7 @@ def process_user_input(user_input: str):
 
     else:
         # 未知类型，尝试默认处理
-        response = "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求x+1=2的解？'\n- 历史：'法国大革命的原因是什么？'\n- 金融：'什么是股票？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
+        response = "抱歉，我无法理解您的问题。请尝试以作业问题的形式提问，例如：\n- 数学：'如何求x+1=2的解？'\n- 历史：'法国大革命的原因是什么？'\n- 经济：'供给和需求如何影响价格？'\n- 化学：'水的化学式是什么？'"
 
     # 添加助手回复到历史
     st.session_state.messages.append({
@@ -345,7 +335,7 @@ def main():
 
     # 显示欢迎消息（首次访问）
     if not st.session_state.messages:
-        st.info("👋 欢迎使用 SmartTutor！请在下方输入您的数学、历史、金融、经济或化学作业问题。")
+        st.info("👋 欢迎使用 SmartTutor！请在下方输入您的数学、历史、经济或化学作业问题。")
 
     # 渲染聊天历史
     render_chat_history()
