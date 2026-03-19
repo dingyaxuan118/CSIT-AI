@@ -128,7 +128,7 @@ def render_sidebar():
     # API来源选择
     api_source = st.sidebar.selectbox(
         "API Source",
-        ["openai", "modelscope", "azure", "hkust"],
+        ["modelscope", "openai", "azure", "hkust"],
         index=0,
         help="Select the LLM API source to use."
     )
@@ -148,7 +148,7 @@ def render_sidebar():
     st.session_state.user_level = user_level
 
     # 调试开关
-    show_debug = st.sidebar.checkbox("Show Debug Info", value=False)
+    show_debug = st.sidebar.checkbox("Show Debug Info", value=True)
     st.session_state.show_debug = show_debug
 
     # 重置对话

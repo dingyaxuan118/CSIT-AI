@@ -19,7 +19,7 @@ class LLMClient:
     MODELSCOPE_DEFAULT_MODEL = "MiniMax/MiniMax-M2.5"
     """LLM客户端封装类"""
 
-    def __init__(self, api_source: str = "openai", api_key: Optional[str] = None):
+    def __init__(self, api_source: str = "modelscope", api_key: Optional[str] = None):
         """
         初始化LLM客户端
 
